@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("Simple Calculator")
+st.title("Calculator")
 
 # Input numbers
 a = st.number_input("Enter your first number:", step=1.0, format="%.4f")
