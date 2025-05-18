@@ -45,23 +45,24 @@ import streamlit as st
 
 def calculate(num1, num2, operation):
     try:
-        if operation == 'Add':
+        if operation == '+':
             return num1 + num2
-        elif operation == 'Subtract':
+        elif operation == '-':
             return num1 - num2
-        elif operation == 'Multiply':
+        elif operation == '*':
             return num1 * num2
-        elif operation == 'Divide':
+        elif operation == '/':
             if num2 == 0:
                 return "Error: Division by zero"
             return num1 / num2
-        elif operation == 'Power':
+        elif operation == '^':
             return num1 ** num2
-        elif operation == 'Root':
+        elif operation == '√':
             if num2 == 0:
                 return "Error: Zero root not defined"
+            # num1 root num2 means num1^(1/num2)
             return num1 ** (1 / num2)
-        elif operation == 'Percentage':
+        elif operation == '%':
             return (num1 * num2) / 100
     except Exception as e:
         return f"Error: {str(e)}"
@@ -84,15 +85,22 @@ def main():
         .stButton>button {
             background-color: #4CAF50;
             color: white;
-            font-size: 18px;
+            font-size: 20px;
             height: 3rem;
             width: 100%;
             border-radius: 12px;
             transition: background-color 0.3s ease;
+            font-weight: bold;
         }
         .stButton>button:hover {
             background-color: #45a049;
             color: white;
+        }
+        .operation-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
         </style>
         """,
@@ -100,17 +108,29 @@ def main():
     )
 
     st.title("🧮 Professional Calculator")
-    st.write("Use this calculator to perform various mathematical operations with ease and precision.")
+    st.write("Enter numbers and click an operation to calculate:")
 
-    with st.form(key='calc_form'):
-        num1 = st.number_input("Enter first number", format="%.6f")
-        num2 = st.number_input("Enter second number", format="%.6f")
-        operation = st.selectbox("Select an operation", 
-                                 ['Add', 'Subtract', 'Multiply', 'Divide', 'Power', 'Root', 'Percentage'])
-        
-        submit_button = st.form_submit_button(label='Calculate')
-    
-    if submit_button:
+    num1 = st.number_input("Enter first number", format="%.6f")
+    num2 = st.number_input("Enter second number", format="%.6f")
+
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+    operation = None
+    if col1.button("+"):
+        operation = '+'
+    elif col2.button("-"):
+        operation = '-'
+    elif col3.button("*"):
+        operation = '*'
+    elif col4.button("/"):
+        operation = '/'
+    elif col5.button("^"):
+        operation = '^'
+    elif col6.button("√"):
+        operation = '√'
+    elif col7.button("%"):
+        operation = '%'
+
+    if operation is not None:
         result = calculate(num1, num2, operation)
         if isinstance(result, str) and result.startswith("Error:"):
             st.error(result)
